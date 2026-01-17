@@ -1,66 +1,68 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useState, useRef, useEffect } from "react";
+import { Chessboard } from "../components/Chessboard";
+import { Chat } from "../components/Chat";
+import { ControlPanel } from "../components/ControlPanel";
 
 export default function Home() {
+  const [ws, setWs] = useState<WebSocket | null>(null);
+  const [assignedPlayer, setAssignedPlayer] = useState<'white' | 'black' | 'spectator' | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    // Connect to websocket server
+    const websocket = new WebSocket('ws://localhost:8080');
+    wsRef.current = websocket;
+    setWs(websocket);
+
+    websocket.onopen = () => {
+      console.log('Connected to game server');
+    };
+
+    websocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      if (data.type === 'assigned') {
+        setAssignedPlayer(data.player);
+        console.log('Assigned as:', data.player);
+      } else if (data.type === 'gameFull') {
+        console.log('Game is full:', data.message);
+        alert('Game is full! Only 2 players allowed. Please try again later.');
+        websocket.close();
+      }
+    };
+
+    websocket.onclose = () => {
+      console.log('Disconnected from game server');
+      setAssignedPlayer(null);
+    };
+
+    return () => {
+      websocket.close();
+    };
+  }, []);
+
+  const sendMessage = (data: any) => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(data));
+    }
+  };
+
+  const handleReset = () => {
+    sendMessage({ type: 'reset' });
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div style={{ display: 'flex', height: '100vh' }}>
+      <div style={{ width: '200px', borderRight: '1px solid #ccc' }}>
+        <ControlPanel onReset={handleReset} />
+      </div>
+      <div style={{ flex: 1 }}>
+        <Chessboard ws={ws} />
+      </div>
+      <div style={{ width: '300px', borderLeft: '1px solid #ccc' }}>
+        <Chat ws={ws} assignedPlayer={assignedPlayer} />
+      </div>
     </div>
   );
 }
