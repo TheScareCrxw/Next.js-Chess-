@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     // Connect to websocket server
-    const websocket = new WebSocket('https://chess-h1qw.onrender.com');
+    const websocket = new WebSocket('wss://chess-h1qw.onrender.com');
     wsRef.current = websocket;
     setWs(websocket);
 
