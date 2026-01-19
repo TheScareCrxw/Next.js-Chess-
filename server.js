@@ -1,7 +1,16 @@
+const http = require('http');
 const WebSocket = require('ws');
 const { Board } = require('./board');
 
-const wss = new WebSocket.Server({ port: 8080 });
+const port = process.env.PORT || 8080;
+
+const server = http.createServer();
+const wss = new WebSocket.Server({ server });
+
+server.listen(port, () => {
+  console.log(`WebSocket server running on port ${port}`);
+});
+
 
 let gameState = {
   board: new Board(),
@@ -132,4 +141,4 @@ wss.on('connection', (ws) => {
   });
 });
 
-console.log('WebSocket server running on port 8080');
+
