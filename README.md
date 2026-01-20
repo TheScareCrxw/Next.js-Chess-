@@ -1,67 +1,31 @@
-♟️ Realtime Multiplayer Chess
+♟️ **Realtime Multiplayer Chess**
 
-A real-time multiplayer chess web application inspired by chess.com. Built with Next.js and WebSockets, this project allows two players to connect, play chess live, and chat in the same game session.
+A real-time multiplayer chess web application inspired by chess.com. Built with Next.js and WebSockets, this project allows two players to connect, play chess live, and chat in the same game session. The frontend is deployed with Vercel and the WebSocket backend is hosted on Render, providing fast, scalable real-time communication.
 
-The frontend is deployed with Vercel and the WebSocket backend is hosted on Render, providing fast, scalable real-time communication.
+🚀 **[Live Demo](next-js-chess-virid.vercel.app)**
 
-🚀 Live Demo
+✨ **Features**
 
-Frontend:
+- Real-time multiplayer chess using WebSockets
 
-next-js-chess-virid.vercel.app
+- Automatic player assignment (white / black)
 
-Backend (WebSocket):
+- Live board updates
 
-wss://your-backend.onrender.com
+- In-game chat
 
-✨ Features
+- Game reset functionality
 
-Real-time multiplayer chess using WebSockets
+🛠 **Tech Stack**
 
-Automatic player assignment (white / black)
+- Next.js – Frontend framework
 
-Move validation and turn enforcement
+- Node.js – Backend runtime
 
-Live board updates
+- WebSocket (ws) – Real-time communication
 
-In-game chat
+- Render Web Services – Backend hosting
 
-Game reset functionality
+- Vercel – Frontend hosting
 
-Clean UI with Tabler SVG icons
-
-🛠 Tech Stack
-
-Next.js – Frontend framework
-
-Node.js – Backend runtime
-
-WebSocket (ws) – Real-time communication
-
-Render Web Services – Backend hosting
-
-Vercel – Frontend hosting
-
-Tabler Icons – SVG icon system
-
-🧩 Architecture
-
-Frontend (Next.js on Vercel)
-
-Backend (Node.js WebSocket server on Render)
-
-Clients connect via secure WebSocket (wss://)
-
-Server manages game state and broadcasts updates
-
-⚙️ Setup
-
-Clone the repository:
-
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
-
-
-Install dependencies:
-
-npm install
+- Tabler Icons – SVG icon system
